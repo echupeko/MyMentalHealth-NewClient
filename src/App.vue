@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <PageAuthorized v-if="showAuthorized" @login-success="loginHandler" @login-reject="loginHandler" />
+    <PageAuthorized v-if="showAuthorized" :is-signup="isSignup" @login-success="loginHandler" @login-reject="loginHandler" />
     <div v-else>Залогинен</div>
     <NotificationCard v-if="showNotification && !!notification" :notification="notification" />
   </div>
@@ -16,6 +16,7 @@ export default defineComponent({
   name: "App",
   components: { NotificationCard, PageAuthorized },
   setup() {
+    const isSignup = ref(false);
     const showAuthorized = ref(true); //?
     const showNotification = ref(false); //?
     const notification = ref<Notification>(); // перенести в стор
@@ -27,13 +28,63 @@ export default defineComponent({
       setTimeout(() => (showNotification.value = false), 2000);
     };
 
-    return { showAuthorized, showNotification, notification, loginHandler };
+    return { isSignup, showAuthorized, showNotification, notification, loginHandler };
   },
 });
 </script>
 
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+
 * {
-  font-family: "Open Sans", serif;
+  box-sizing: border-box;
+}
+
+:root {
+  --green: #397333;
+  --green-lighten: #59b44f;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  background: #f6f5f7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: -20px 0 50px;
+  margin-top: 20px;
+}
+
+h1 {
+  font-weight: bold;
+  margin: 0;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+span {
+  font-size: 12px;
+}
+
+a {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 15px 0;
+}
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  > * {
+    pointer-events: none;
+  }
 }
 </style>
