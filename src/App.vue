@@ -1,26 +1,39 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="main">
+    <PageAuthorized v-if="showAuthorized" @login-success="loginHandler" @login-reject="loginHandler" />
+    <div v-else>Залогинен</div>
+    <NotificationCard v-if="showNotification && !!notification" :notification="notification" />
+  </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script lang="ts">
+import { defineComponent, ref } from "vue";
+import PageAuthorized from "@/pages/PageAuthorized.vue";
+import NotificationCard from "@/components/NotificationCard.vue";
+import { Notification, NotificationTypes } from "@/types";
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+export default defineComponent({
+  name: "App",
+  components: { NotificationCard, PageAuthorized },
+  setup() {
+    const showAuthorized = ref(true); //?
+    const showNotification = ref(false); //?
+    const notification = ref<Notification>(); // перенести в стор
+
+    const loginHandler = (data: Notification) => {
+      showNotification.value = true;
+      notification.value = data;
+      if (notification.value?.type === NotificationTypes.SUCCESS) showAuthorized.value = false;
+      setTimeout(() => (showNotification.value = false), 2000);
+    };
+
+    return { showAuthorized, showNotification, notification, loginHandler };
+  },
+});
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss">
+* {
+  font-family: "Open Sans", serif;
 }
 </style>
