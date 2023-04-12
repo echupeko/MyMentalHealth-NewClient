@@ -1,12 +1,10 @@
 <template>
-  <div class="overlay" :class="{ '__right-panel-active': isSignup }">
+  <div class="overlay" :class="{ '__left-side-active': activeIsRight }">
     <div class="overlay__container">
-      <div v-for="(panel, index) in panels" :key="index" class="overlay__panel" :class="`__${panel.side}`">
+      <div v-for="(panel, index) in panels" class="overlay__panel" :key="index" :class="`__${panel.side}`">
         <h1>{{ panel.title }}</h1>
         <p>{{ panel.subtitle }}</p>
-        <button class="ghost" id="signIn" @click="$emit('toggle-signup')">
-          {{ panel.side === "right" ? "Sign Up" : "Sign In" }}
-        </button>
+        <base-button outline rounded negative :title="panel.side === 'right' ? 'Sign Up' : 'Sign In'" @click="$emit('toggle-panel')" />
       </div>
     </div>
   </div>
@@ -14,11 +12,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import BaseButton from "@/components/BaseButton.vue";
 
 export default defineComponent({
-  name: "OverlayPanels",
+  name: "OverlayPanel",
+  components: { BaseButton },
   props: {
-    isSignup: { type: Boolean, required: true },
+    activeIsRight: { type: Boolean, required: true },
   },
   setup() {
     const panels = [
@@ -32,7 +32,7 @@ export default defineComponent({
         subtitle: "Enter your personal details and start journey with us",
         side: "right",
       },
-    ];
+    ]; //описать тип
     return { panels };
   },
 });
@@ -49,7 +49,7 @@ export default defineComponent({
   transition: transform 0.6s ease-in-out;
   z-index: 100;
 
-  &.__right-panel-active {
+  &.__left-side-active {
     transform: translateX(-100%);
     .overlay {
       &__container {
@@ -100,32 +100,6 @@ export default defineComponent({
     &.__left {
       transform: translateY(-20%);
     }
-  }
-
-  button {
-    border-radius: 20px;
-    border: 1px solid var(--green);
-    background: var(--green);
-    color: #fff;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 12px 45px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: transform 80ms ease-in;
-  }
-
-  button:active {
-    transform: scale(0.95);
-  }
-
-  button:focus {
-    outline: none;
-  }
-
-  button.ghost {
-    background: transparent;
-    border-color: #fff;
   }
 }
 </style>
