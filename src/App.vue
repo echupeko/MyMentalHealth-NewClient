@@ -1,20 +1,21 @@
 <template>
   <div class="main">
-    <PageAuthorized v-if="showAuthorized" :is-signup="isSignup" @login-success="loginHandler" @login-reject="loginHandler" />
-    <div v-else>Залогинен</div>
-    <NotificationCard v-if="showNotification && !!notification" :notification="notification" />
+    <PageAuthorized v-if="showAuthorized" :is-signup="isSignup" @authorized="loginHandler" />
+    <PageHome v-else/>
+    <NotificationCard :show="showNotification && !!notification" :notification="notification" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import PageAuthorized from "@/pages/PageAuthorized.vue";
+import PageAuthorized from "@/pages/PageAuthorized";
 import NotificationCard from "@/components/NotificationCard.vue";
 import { Notification, NotificationTypes } from "@/types";
+import PageHome from "@/pages/PageHome/PageHome.vue";
 
 export default defineComponent({
   name: "App",
-  components: { NotificationCard, PageAuthorized },
+  components: {PageHome, NotificationCard, PageAuthorized },
   setup() {
     const isSignup = ref(false);
     const showAuthorized = ref(true); //?
@@ -47,17 +48,33 @@ export default defineComponent({
 
 body {
   font-family: "Montserrat", sans-serif;
-  background: #f6f5f7;
+  background: darken(#397333, 15%);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 1024px;
   height: 100vh;
-  margin: -20px 0 50px;
-  margin-top: 20px;
+  margin: 0 auto;
+}
+
+#app, .main {
+  width: 100%;
+  height: 100%;
+}
+
+#app {
+
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 h1 {
+  font-size: 24px;
   font-weight: bold;
   margin: 0;
 }
@@ -78,8 +95,8 @@ a {
   color: #333;
   font-size: 14px;
   text-decoration: none;
-  margin: 15px 0;
 }
+
 .disabled {
   opacity: 0.5;
   pointer-events: none;

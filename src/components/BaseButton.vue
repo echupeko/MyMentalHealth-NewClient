@@ -1,6 +1,6 @@
 <template>
   <button :class="{ __outline: outline, __transparent: transparent, __rounded: rounded, __negative: negative }">
-    {{ title }}
+    {{ content }}
   </button>
 </template>
 
@@ -10,7 +10,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "BaseButton",
   props: {
-    title: { type: String },
+    content: { type: String },
     outline: { type: Boolean },
     transparent: { type: Boolean },
     rounded: { type: Boolean },
@@ -31,27 +31,34 @@ button {
   text-transform: uppercase;
   cursor: pointer;
   transition: transform 80ms ease-in;
+
   &:active {
     transform: scale(0.95);
   }
+
   &:focus {
     outline: none;
   }
+
   &.__negative {
     background: #fff;
     color: var(--green);
   }
+
   &.__outline {
     background: transparent;
     border-color: var(--green);
+
     &.__negative {
       border-color: #fff;
       color: #fff;
     }
   }
+
   &.__rounded {
     border-radius: 100px;
   }
+
   &.__transparent {
     background: transparent;
     color: #262626;

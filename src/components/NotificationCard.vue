@@ -1,6 +1,7 @@
 <template>
-  <div class="notification-modal" :class="modifyClass">
-    <span class="notification-modal__message">{{ notification.message }}</span>
+  <div class="notification-modal" :class="[modifyClass, ...(show ? ['__show'] : [])]">
+    <i class="fa fa-check"></i>
+    <span v-if="notification" class="notification-modal__message">{{ notification.message }}</span>
   </div>
 </template>
 
@@ -11,11 +12,12 @@ import { Notification, NotificationTypes } from "@/types";
 export default defineComponent({
   name: "NotificationCard",
   props: {
-    notification: { type: Object as () => Notification, required: true },
+    show: { type: Boolean, required: true },
+    notification: { type: Object as () => Notification },
   },
   setup(props) {
     const modifyClass = computed<string>(() => {
-      switch (props.notification.type) {
+      switch (props.notification?.type) {
         case NotificationTypes.ERROR:
           return "__error";
         case NotificationTypes.WARNING:
@@ -35,18 +37,24 @@ export default defineComponent({
 <style lang="scss" scoped>
 .notification-modal {
   position: fixed;
-  top: 40px;
-  left: 50%;
+  top: 20px;
+  right: -500px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 30px;
+  max-width: 250px;
+  word-break: break-word;
+  min-height: 30px;
   background: #e7e7e7;
-  border: 1px solid #262626;
   border-radius: 14px;
-  box-shadow: 0 0 5px #262626;
+  box-shadow: 0 0 15px rgba(darken(#397333, 25%), .5);
   color: #262626;
+  padding: 16px;
   transform: translateY(50%);
+  transition: right .5s ease-in-out;
+  &.__show {
+    right: 40px;
+  }
   &.__error {
     background: #ff8080;
   }
@@ -54,13 +62,13 @@ export default defineComponent({
     background: #f3cd5e;
   }
   &.__success {
-    background: #93e331;
+    background: var(--green-lighten);
   }
   &.__information {
     background: #8cadfa;
   }
   &__message {
-    padding: 4px 16px;
+    padding-left: 16px;
   }
 }
 </style>
